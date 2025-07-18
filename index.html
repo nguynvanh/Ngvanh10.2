@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NLAN Panel</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: 'Roboto', sans-serif;
+      background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+    }
+    .login-box, .menu-panel {
+      background: rgba(0,0,0,0.5);
+      border-radius: 20px;
+      padding: 40px;
+      box-shadow: 0 0 30px rgba(175, 84, 175, 0.4);
+      width: 300px;
+      text-align: center;
+      animation: fadeIn 0.6s ease;
+    }
+    .login-box h2 {
+      margin-bottom: 20px;
+      font-size: 28px;
+      text-shadow: 0 0 20px #fff;
+    }
+    input[type="text"], input[type="password"] {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border: none;
+      border-radius: 8px;
+      background: #111;
+      color: white;
+    }
+    .toggle-password {
+      position: absolute;
+      right: 35px;
+      margin-top: -35px;
+      cursor: pointer;
+    }
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      background: linear-gradient(to right, #ff00cc, #3333ff );
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      width: 100%;
+    }
+    .menu-panel {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      max-height: 90vh;
+      overflow-y: auto;
+      width: 90vw;
+      max-width: 400px;
+    }
+    .function-btn {
+      margin: 10px;
+      padding: 15px;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: bold;
+      border: none;
+      width: 100%;
+      transition: 0.3s;
+      background: rgba(255, 255, 255, 0.05);
+      color: white;
+      box-shadow: 0 0 20px rgba(0,0,0,0.4);
+    }
+    .function-btn.active {
+      background: #00ff66;
+      color: #111;
+      box-shadow: 0 0 15px 5px #00da53;
+      transform: scale(1.05);
+    }
+    .stats-box {
+      margin-top: 20px;
+      background: rgba(0,0,0,0.6);
+      padding: 10px;
+      border-radius: 10px;
+      font-size: 14px;
+      width: 100%;
+    }
+    .result-btn {
+      background: #9900ff88;
+      margin-top: 20px;
+    }
+    marquee {
+      margin-top: 20px;
+      color: #fff;
+      font-size: 14px;
+    }
+    #resultBox {
+      display: none;
+      background: rgba(255,255,255,0.1);
+      border-radius: 10px;
+      padding: 15px;
+      margin-top: 20px;
+      font-size: 14px;
+      text-align: left;
+    }
+    #notification {
+      position: fixed;
+      top: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0,0,0,0.7);
+      padding: 10px 20px;
+      border-radius: 10px;
+      font-size: 16px;
+      display: none;
+      z-index: 9999;
+      box-shadow: 0 0 15px #ff00ff;
+    }
+    #loader {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      border: 8px solid #f3f3f3;
+      border-top: 8px solid #ff00cc;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      animation: spin 1s linear infinite;
+      display: none;
+      z-index: 999;
+    }
+    @keyframes spin {
+      0% { transform: translate(-50%, -50%) rotate(0deg); }
+      100% { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <div id="loader"></div>
+  <div id="notification"></div>
+
+  <div class="login-box" id="loginBox">
+    <h2>Đăng Nhập Menu</h2>
+    <input type="text" id="username" placeholder="Tài khoản">
+    <input type="password" id="password" placeholder="Mật khẩu">
+ 
+    <button onclick="login()">Đăng Nhập</button>
+  </div>
+
+  <div class="menu-panel" id="menuPanel">
+    <img src="https://i.imgur.com/UhwBbap.png" style="max-width: 50%; margin-bottom: 10px;">
+    <h2>Supper AImlock 10.2
+    </h2>
+    <marquee"> 🔥 Menu : 18/7/2025 🔥</marquee>
+   
+   
+   
+    <button class="function-btn" onclick="toggleFunc(this)">💠  Aimlock</button>
+    <button class="function-btn" onclick="toggleFunc(this)">💠  Aimhead</button>
+    <button class="function-btn" onclick="toggleFunc(this)">💠  Headlock</button>
+    <button class="function-btn" onclick="toggleFunc(this)">💠  No Reload</button>
+    <button class="function-btn" onclick="toggleFunc(this)">💠  No Recoil</button>
+ 
+    <div class="stats-box">
+       📶 Ping: <span id="ping">Đang đo...</span><br />
+  <marquee>    </marquee>
+       🎮 FPS: <span id="fps">0</span> FPS<br />
+   <marquee>    </marquee>
+       🔋 RAM: <span id="ram">--%</span><br />
+   <marquee>    </marquee>
+       🧠 CPU: <span id="cpu">--%</span>
+    </div>
+
+    <button class="result-btn" onclick="showResults()">Kích Hoạt Chức Năng</button>
+    <button class="result-btn" onclick="activateFree('FREE FIRE')"> FREE FIRE</button>
+    <button class="result-btn" onclick="activateFree('FREE FIRE MAX')"> FREE FIRE MAX</button>
+
+    <div id="resultBox"></div>
+    <marquee scrollamount="5"> 🔥Aimlock - Contact Zalo : 035-652-6568 !</marquee>
+  </div>
+
+  <script>
+    function togglePassword() {
+      const pw = document.getElementById("password");
+      pw.type = pw.type === "password" ? "text" : "password";
+    }
+
+    function login() {
+      const u = document.getElementById("username").value;
+      const p = document.getElementById("password").value;
+      if (u === "ngvanh" && p === "2007") {
+        document.getElementById("loginBox").style.display = "none";
+        document.getElementById("menuPanel").style.display = "flex";
+      } else {
+        showNotification("❌ Sai thông tin đăng nhập!");
+      }
+    }
+
+    const selectedFunctions = [];
+
+    function toggleFunc(btn) {
+      const name = btn.innerText.trim();
+      const isActive = btn.classList.toggle("active");
+      if (isActive) {
+        selectedFunctions.push(name);
+        showNotification("✅ Đã bật " + name);
+      } else {
+        const index = selectedFunctions.indexOf(name);
+        if (index !== -1) selectedFunctions.splice(index, 1);
+        showNotification("❌ Đã tắt " + name);
+      }
+    }
+
+    function showNotification(msg) {
+      const noti = document.getElementById("notification");
+      noti.innerText = msg;
+      noti.style.display = "block";
+      setTimeout(() => noti.style.display = "none", 3000);
+    }
+ setInterval(() => {
+      document.getElementById('ping').textContent = Math.floor(Math.random() * 60 + 10) + "ms";
+      
+      document.getElementById('fps').textContent = Math.floor(Math.random() * 60 + 10) + "";
+      
+      document.getElementById('ram').textContent = Math.floor(Math.random() * 60 + 30) + "%";
+
+      document.getElementById('cpu').textContent = Math.floor(Math.random() * 50 + 20) + "%";
+    }, 2000);
+    function showResults() {
+      const loader = document.getElementById("loader");
+      const box = document.getElementById("resultBox");
+      loader.style.display = "block";
+      box.style.display = "none";
+
+      let percent = 0;
+      const interval = setInterval(() => {
+        percent++;
+        showNotification("🔄 Đang xử lý... " + percent + "%");
+        if (percent >= 100) {
+          clearInterval(interval);
+          loader.style.display = "none";
+          if (selectedFunctions.length === 0) {
+            box.innerText = "Chưa chọn chức năng nào.";
+          } else {
+            box.innerText = "Chức năng đã bật:\n" + selectedFunctions.join("\n");
+          }
+          box.style.display = "block";
+          setTimeout(() => box.style.display = "none", 3000);
+        }
+      }, 20);
+    }
+
+    function activateFree(type) {
+      const loader = document.getElementById("loader");
+      loader.style.display = "block";
+      showNotification("⏳ Đang kích hoạt cho " + type + "...");
+
+      setTimeout(() => {
+        loader.style.display = "none";
+        showNotification("🚀 Đã kích hoạt cho " + type + " thành công!");
+      }, 2000);
+    }
+  </script>
+</body>
+</html>
